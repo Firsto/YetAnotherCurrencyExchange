@@ -1,18 +1,14 @@
 package studio.inprogress.yace.app.ui.main;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.ObservableField;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.View;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ObservableField;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
-import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import studio.inprogress.yace.app.R;
 import studio.inprogress.yace.app.databinding.ActivityMainBinding;
@@ -23,11 +19,10 @@ import studio.inprogress.yace.app.ui.adapter.item.CurrencyItem;
 import studio.inprogress.yace.app.ui.base.BaseActivity;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends BaseActivity
-        implements MainMvpView, SwipeRefreshLayout.OnRefreshListener, FastAdapter.OnClickListener<CurrencyItem> {
+        implements MainMvpView, SwipeRefreshLayout.OnRefreshListener {
 
     @InjectPresenter
     MainPresenter presenter;
@@ -66,10 +61,7 @@ public class MainActivity extends BaseActivity
         if (currenciesAdapter == null) {
             currenciesAdapter = new FastItemAdapter<>();
         }
-        currenciesAdapter.withOnClickListener(this);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        binding.currenciesList.setLayoutManager(layoutManager);
         binding.currenciesList.setAdapter(currenciesAdapter);
     }
 
@@ -104,14 +96,14 @@ public class MainActivity extends BaseActivity
 
     private void initAdapterData(CurrencyResponse currencyResponse) {
         currenciesAdapter.clear();
-        CurrencyItem baseItem = new CurrencyItem(new CurrencyResponse(currencyResponse.getBase(), currencyResponse.getBase(), currencyResponse.getRates(), new ObservableField<>(1.0), 1.0));
+        CurrencyItem baseItem = new CurrencyItem(new CurrencyResponse(currencyResponse.getBase(), currencyResponse.getDate(), currencyResponse.getRates(), new ObservableField<>(1.0), 1.0));
         baseItem.setWatcher(watcher);
         currenciesAdapter.add(baseItem);
 
         HashMap<String, Double> rates = currencyResponse.getRates();
         for (Map.Entry<String, Double> rate : rates.entrySet()) {
             if (rate.getKey().equals(baseItem.getCurrencies().getBase())) continue;
-            CurrencyResponse response = new CurrencyResponse(rate.getKey(), "", new HashMap<>(), new ObservableField<>(), rate.getValue());
+            CurrencyResponse response = new CurrencyResponse(rate.getKey(), currencyResponse.getDate(), new HashMap<>(), new ObservableField<>(), rate.getValue());
             CurrencyItem currencyItem = new CurrencyItem(response);
             currencyItem.getCurrencies().getAmount().set(rate.getValue());
             currenciesAdapter.add(currencyItem);
@@ -121,12 +113,6 @@ public class MainActivity extends BaseActivity
     @Override
     public void clearData() {
         currenciesAdapter.clear();
-    }
-
-    @Override
-    public boolean onClick(View v, IAdapter<CurrencyItem> adapter, CurrencyItem item, int position) {
-        showToast("Click " + item.getCurrencies().getBase());
-        return false;
     }
 
     private TextWatcher watcher = new TextWatcher() {
@@ -143,10 +129,10 @@ public class MainActivity extends BaseActivity
         @Override
         public void afterTextChanged(Editable s) {
             if (TextUtils.isEmpty(s)) return;
-            List<CurrencyItem> adapterItems = currenciesAdapter.getAdapterItems();
-            for (CurrencyItem item : adapterItems) {
+            for (CurrencyItem item : currenciesAdapter.getAdapterItems()) {
                 item.getCurrencies().getAmount().set(Double.parseDouble(s.toString()) * item.getCurrencies().getRate());
             }
         }
     };
+
 }

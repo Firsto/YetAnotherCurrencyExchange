@@ -1,6 +1,6 @@
 package studio.inprogress.yace.app.model.api.response
 
-import android.databinding.ObservableField
+import androidx.databinding.ObservableField
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 

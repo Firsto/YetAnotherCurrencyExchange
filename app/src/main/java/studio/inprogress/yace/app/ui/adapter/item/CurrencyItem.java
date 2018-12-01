@@ -1,8 +1,8 @@
 package studio.inprogress.yace.app.ui.adapter.item;
 
-import android.support.v7.widget.RecyclerView;
 import android.text.TextWatcher;
 import android.view.View;
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import studio.inprogress.yace.app.R;
 import studio.inprogress.yace.app.databinding.ItemCurrencyBinding;
@@ -58,7 +58,7 @@ public class CurrencyItem extends AbstractItem<CurrencyItem, CurrencyItem.ViewHo
         this.watcher = watcher;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    protected static class ViewHolder extends FastAdapter.ViewHolder<CurrencyItem> {
 
         ItemCurrencyBinding binding;
 
@@ -69,6 +69,16 @@ public class CurrencyItem extends AbstractItem<CurrencyItem, CurrencyItem.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             binding = ItemCurrencyBinding.bind(itemView);
+        }
+
+        @Override
+        public void bindView(CurrencyItem item, List<Object> payloads) {
+
+        }
+
+        @Override
+        public void unbindView(CurrencyItem item) {
+
         }
     }
 }
