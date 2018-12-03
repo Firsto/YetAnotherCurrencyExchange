@@ -8,6 +8,7 @@ import studio.inprogress.yace.app.model.api.response.CurrencyResponse;
 import studio.inprogress.yace.app.ui.RxPresenter;
 
 import javax.inject.Inject;
+import java.util.concurrent.TimeUnit;
 
 @InjectViewState
 public class MainPresenter extends RxPresenter<MainMvpView> {
@@ -34,7 +35,9 @@ public class MainPresenter extends RxPresenter<MainMvpView> {
         getViewState().showProgress();
 
         loadCurrenciesSubscription = dataManager.getCurrencies(base)
-                .compose(applySingleSchedulers())
+                .delay(1, TimeUnit.SECONDS)
+                .repeat()
+                .compose(applyObservableSchedulers())
                 .subscribe(this::loadCurrenciesSuccess, this::loadCurrenciesError);
     }
 
@@ -49,5 +52,9 @@ public class MainPresenter extends RxPresenter<MainMvpView> {
     public void refresh() {
         getViewState().clearData();
         loadCurrencies(null);
+    }
+
+    public void changeAmount(double amount) {
+
     }
 }

@@ -1,10 +1,11 @@
 package studio.inprogress.yace.app.model.api.response
 
-import androidx.databinding.ObservableField
+import androidx.databinding.Bindable
+import androidx.databinding.ObservableDouble
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class CurrencyResponse(
+data class CurrencyResponse (
     @SerializedName("base")
     @Expose
     val base: String,
@@ -15,12 +16,10 @@ data class CurrencyResponse(
 
     @SerializedName("rates")
     @Expose
-    val rates: HashMap<String, Double>,
+    val rates: Map<String, Double>,
 
-    var amount: ObservableField<Double> = ObservableField(11.0),
     val rate: Double
 ) {
-    init {
-        amount = ObservableField(1.0)
-    }
+    @Bindable
+    var amount: ObservableDouble = ObservableDouble(1.0)
 }

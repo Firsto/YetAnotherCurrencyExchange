@@ -1,11 +1,8 @@
 package studio.inprogress.yace.app.ui.main;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ObservableField;
+import androidx.databinding.Observable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
@@ -103,26 +100,42 @@ public class MainActivity extends BaseActivity
     @Override
     public void showCurrencies(CurrencyResponse currencyResponse) {
         cancelRefreshing();
-        initAdapterData(currencyResponse);
+        if (currenciesAdapter.getAdapterItemCount() == 0) {
+            initAdapterData(currencyResponse);
+        } else {
+            updateCurrencies(currencyResponse);
+        }
         binding.currenciesList.postDelayed(this::hideKeyboard, 100);
     }
 
     private void initAdapterData(CurrencyResponse currencyResponse) {
         baseCurrencyAdapter.clear();
         currenciesAdapter.clear();
-        CurrencyItem baseItem = new CurrencyItem(new CurrencyResponse(currencyResponse.getBase(), currencyResponse.getDate(), currencyResponse.getRates(), new ObservableField<>(1.0), 1.0));
+        CurrencyItem baseItem = new CurrencyItem(new CurrencyResponse(currencyResponse.getBase(), currencyResponse.getDate(), currencyResponse.getRates(), 1.0));
         baseItem.withTag(currencyResponse);
-        baseItem.setWatcher(watcher);
         baseCurrencyAdapter.add(baseItem);
 
-        HashMap<String, Double> rates = currencyResponse.getRates();
+        baseItem.getCurrencies().getAmount().addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                updateCurrencies(baseItem.getCurrencies());
+            }
+        });
+
+        Map<String, Double> rates = currencyResponse.getRates();
         for (Map.Entry<String, Double> rate : rates.entrySet()) {
             if (rate.getKey().equals(baseItem.getCurrencies().getBase())) continue;
-            CurrencyResponse response = new CurrencyResponse(rate.getKey(), currencyResponse.getDate(), new HashMap<>(), new ObservableField<>(), rate.getValue());
+            CurrencyResponse response = new CurrencyResponse(rate.getKey(), currencyResponse.getDate(), new HashMap<>(), rate.getValue());
             CurrencyItem currencyItem = new CurrencyItem(response);
             currencyItem.withTag(response);
             currencyItem.getCurrencies().getAmount().set(rate.getValue());
             currenciesAdapter.add(currencyItem);
+        }
+    }
+
+    private void updateCurrencies(CurrencyResponse currencyResponse) {
+        for (CurrencyItem item : currenciesAdapter.getAdapterItems()) {
+            item.getCurrencies().getAmount().set(baseCurrencyAdapter.getAdapterItem(0).getCurrencies().getAmount().get() * currencyResponse.getRates().get(item.getCurrencies().getBase()).doubleValue());
         }
     }
 
@@ -131,25 +144,4 @@ public class MainActivity extends BaseActivity
         baseCurrencyAdapter.clear();
         currenciesAdapter.clear();
     }
-
-    private TextWatcher watcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (TextUtils.isEmpty(s.toString())) return;
-            for (CurrencyItem item : currenciesAdapter.getAdapterItems()) {
-                item.getCurrencies().getAmount().set(Double.parseDouble(s.toString()) * item.getCurrencies().getRate());
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
-
 }

@@ -7,6 +7,10 @@
 
         <import type="java.util.Currency"/>
 
+        <import type="java.lang.Double"/>
+
+        <import type="java.lang.String"/>
+
         <import type="studio.inprogress.yace.app.utils.PicturesUtility"/>
 
         <import type="com.jwang123.flagkit.FlagKit"/>
@@ -16,6 +20,10 @@
         <import type="studio.inprogress.yace.app.utils.CurrencyUtils"/>
 
         <import type="android.view.View"/>
+
+        <variable
+                name="converter"
+                type="studio.inprogress.yace.app.utils.Converter"/>
 
         <variable
                 name="curr"
@@ -33,9 +41,11 @@
         <ImageView
                 android:padding="@dimen/margin8"
                 android:id="@+id/currencyImage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@{PicturesUtility.getCountryImage(context, CurrencyUtils.getCountryCodeFromCurrencyCode(curr.base))}"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:src="@{PicturesUtility.getCountryImage(context, curr.base)}"
                 tools:src="@android:drawable/btn_star"/>
 
         <LinearLayout
@@ -65,11 +75,13 @@
 
         <EditText
                 android:id="@+id/amount"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:inputType="number"
-                android:gravity="center_horizontal"
+                android:text="@={curr.amount}"
+                android:layout_gravity="end"
+                android:maxWidth="120dp"
+                android:digits="0123456789."
                 tools:text="123.00"
-                android:text="@{String.valueOf(curr.amount.get())}"
                 android:layout_height="wrap_content"/>
 
     </LinearLayout>
