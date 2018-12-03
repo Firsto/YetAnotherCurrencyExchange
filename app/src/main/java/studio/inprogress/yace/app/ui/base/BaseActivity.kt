@@ -2,7 +2,7 @@ package studio.inprogress.yace.app.ui.base
 
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.arellomobile.mvp.MvpAppCompatActivity

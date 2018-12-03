@@ -1,76 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="java.util.Currency"/>
+        <import type="java.util.Currency" />
 
-        <import type="studio.inprogress.yace.app.utils.PicturesUtility"/>
+        <import type="studio.inprogress.yace.app.utils.PicturesUtility" />
 
-        <import type="com.jwang123.flagkit.FlagKit"/>
+        <import type="studio.inprogress.yace.R" />
 
-        <import type="studio.inprogress.yace.R"/>
-
-        <import type="studio.inprogress.yace.app.utils.CurrencyUtils"/>
-
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <variable
-                name="curr"
-                type="studio.inprogress.yace.app.model.api.response.CurrencyResponse"/>
+            name="converter"
+            type="studio.inprogress.yace.app.utils.TextBindingAdapter" />
+
+        <variable
+            name="curr"
+            type="studio.inprogress.yace.app.model.api.response.CurrencyResponse" />
     </data>
 
     <LinearLayout
-            android:padding="@dimen/margin8"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:id="@+id/currency_item"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content">
+        android:id="@+id/currency_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin8">
 
         <ImageView
-                android:padding="@dimen/margin8"
-                android:id="@+id/currencyImage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@{PicturesUtility.getCountryImage(context, CurrencyUtils.getCountryCodeFromCurrencyCode(curr.base))}"
-                tools:src="@android:drawable/btn_star"/>
+            android:id="@+id/currencyImage"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_gravity="center"
+            android:padding="@dimen/margin8"
+            android:scaleType="centerCrop"
+            android:src="@{PicturesUtility.getCountryImage(context, curr.base)}"
+            tools:src="@android:drawable/btn_star" />
 
         <LinearLayout
-                android:layout_width="0dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/currencyName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="@{curr.base}"
+                android:textSize="@dimen/text16"
+                android:textStyle="bold"
+                tools:text="GBP" />
 
             <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="GBP"
-                    android:text="@{curr.base}"
-                    android:textSize="@dimen/text16"
-                    android:textStyle="bold"
-                    android:id="@+id/currencyName"/>
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:id="@+id/currencyDescription"
-                    android:text="@{Currency.getInstance(curr.base).displayName}"
-                    tools:text="British Pound"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text12"
-                    android:textColor="@android:color/darker_gray"/>
+                android:id="@+id/currencyDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{Currency.getInstance(curr.base).displayName}"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="@dimen/text12"
+                tools:text="British Pound" />
         </LinearLayout>
 
         <EditText
-                android:id="@+id/amount"
-                android:layout_width="100dp"
-                android:inputType="number"
-                android:gravity="center_horizontal"
-                tools:text="123.00"
-                android:text="@{String.valueOf(curr.amount.get())}"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:digits="0123456789."
+            android:gravity="end"
+            android:hint="0.00"
+            android:inputType="number"
+            android:lines="1"
+            android:maxWidth="120dp"
+            android:text="@={curr.amount}"
+            tools:text="123.00" />
 
     </LinearLayout>
 </layout>
