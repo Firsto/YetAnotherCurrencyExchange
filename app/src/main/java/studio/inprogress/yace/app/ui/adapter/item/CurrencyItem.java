@@ -6,7 +6,7 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 import studio.inprogress.yace.app.R;
 import studio.inprogress.yace.app.databinding.ItemCurrencyBinding;
 import studio.inprogress.yace.app.model.api.response.CurrencyResponse;
-import studio.inprogress.yace.app.utils.Converter;
+import studio.inprogress.yace.app.utils.TextBindingAdapter;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class CurrencyItem extends AbstractItem<CurrencyItem, CurrencyItem.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             binding = ItemCurrencyBinding.bind(itemView);
-            binding.setConverter(new Converter());
+            binding.setConverter(new TextBindingAdapter());
         }
 
         @Override

@@ -21,5 +21,5 @@ data class CurrencyResponse (
     val rate: Double
 ) {
     @Bindable
-    var amount: ObservableDouble = ObservableDouble(1.0)
+    var amount: ObservableDouble = ObservableDouble(100.0)
 }

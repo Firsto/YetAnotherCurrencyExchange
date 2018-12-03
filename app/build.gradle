@@ -116,9 +116,6 @@ dependencies {
 
     implementation 'com.jakewharton.timber:timber:4.6.1'
 
-    implementation 'com.jwang123.flagkit:flagkit:1.0'
-    implementation 'com.neovisionaries:nv-i18n:1.23'
-
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }

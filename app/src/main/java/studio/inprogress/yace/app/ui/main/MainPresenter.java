@@ -29,6 +29,12 @@ public class MainPresenter extends RxPresenter<MainMvpView> {
         loadCurrencies(null);
     }
 
+    @Override
+    public void onDestroy() {
+        unsubscribe(loadCurrenciesSubscription);
+        super.onDestroy();
+    }
+
     public void loadCurrencies(String base) {
         unsubscribe(loadCurrenciesSubscription);
 
@@ -42,6 +48,7 @@ public class MainPresenter extends RxPresenter<MainMvpView> {
     }
 
     private void loadCurrenciesError(Throwable throwable) {
+        unsubscribe(loadCurrenciesSubscription);
         getViewState().showError(throwable);
     }
 
@@ -52,9 +59,5 @@ public class MainPresenter extends RxPresenter<MainMvpView> {
     public void refresh() {
         getViewState().clearData();
         loadCurrencies(null);
-    }
-
-    public void changeAmount(double amount) {
-
     }
 }

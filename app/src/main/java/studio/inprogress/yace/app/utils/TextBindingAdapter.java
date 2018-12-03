@@ -7,15 +7,16 @@ import androidx.databinding.InverseBindingAdapter;
 
 import java.text.DecimalFormat;
 
-public class Converter {
+public class TextBindingAdapter {
 
     @BindingAdapter("android:text")
     public static void setDouble(EditText view, double value) {
-        if (Double.isNaN(value)) view.setText("");
+        if (Double.isNaN(value) || value == 0) view.setText("");
         else {
             int cursorPosition = view.getSelectionStart();
             DecimalFormat df = new DecimalFormat("#.##");
             String text = df.format(value);
+//            String text = String.format("%.2f", value);
             view.setText(text);
             view.setSelection(text.length() > cursorPosition ? cursorPosition : text.length());
         }

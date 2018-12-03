@@ -20,7 +20,7 @@ public class NetworkModule {
 
     @Provides
     public HttpLoggingInterceptor loggingInterceptor() {
-        return new HttpLoggingInterceptor(message -> Timber.i(message)).setLevel(HttpLoggingInterceptor.Level.BODY);
+        return new HttpLoggingInterceptor(message -> Timber.i(message)).setLevel(HttpLoggingInterceptor.Level.BASIC);
     }
 
     @Provides
