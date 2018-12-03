@@ -3,6 +3,7 @@ package studio.inprogress.yace.app.ui.main;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.Observable;
 import androidx.recyclerview.widget.RecyclerView;
@@ -187,6 +188,8 @@ public class MainActivity extends BaseActivity
     public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
         if (position == 0) return false;
         if (item instanceof CurrencyItem) {
+            ((EditText) v.findViewById(R.id.amount)).requestFocus();
+
             presenter.loadCurrencies(((CurrencyItem) item).getCurrencies().getBase());
 
             CurrencyItem baseItem = baseCurrencyAdapter.getAdapterItem(0);

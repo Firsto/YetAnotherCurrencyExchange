@@ -16,7 +16,6 @@ public class TextBindingAdapter {
             int cursorPosition = view.getSelectionStart();
             DecimalFormat df = new DecimalFormat("#.##");
             String text = df.format(value);
-//            String text = String.format("%.2f", value);
             view.setText(text);
             view.setSelection(text.length() > cursorPosition ? cursorPosition : text.length());
         }
@@ -26,6 +25,7 @@ public class TextBindingAdapter {
     public static double getDouble(TextView view) {
         String num = view.getText().toString();
         if (num.isEmpty()) return 0.0;
+        if (num.contains(",")) num = num.replace(",", ".");
         try {
             return Double.parseDouble(num);
         } catch (NumberFormatException e) {
